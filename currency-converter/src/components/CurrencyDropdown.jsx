@@ -67,7 +67,7 @@ export default function CurrencyDropdown({
   ${
     currency.code === value
       ? "bg-card text-accent"
-      : "hover:bg-card"
+      : "hover:bg-dropdown"
   }
 `}
   >

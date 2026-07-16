@@ -1,6 +1,7 @@
 import usFlag from "../assets/images/flags/us.webp";
 import euFlag from "../assets/images/flags/eu.webp";
 import plFlag from "../assets/images/flags/pl.webp";
+import gbFlag from "../assets/images/flags/gb.webp";
 const currencies = [
   {
   code: "USD",
@@ -16,9 +17,15 @@ const currencies = [
 },
 {
  code: "PLN",
-  name: "ZLOTY",
+  name: "Zloty",
   symbol: "zł",
   flag: plFlag
+},
+{
+ code: "GBP",
+  name: "British Pound",
+  symbol: "£",
+  flag: gbFlag,
 },
 ];
 

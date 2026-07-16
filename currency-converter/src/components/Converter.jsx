@@ -9,7 +9,9 @@ export default function Converter ({
     setFromCurrency,
     toCurrency,
     setToCurrency,
-
+exchangeRates,
+isLoading,
+error,
 })
 { 
   function handleFromCurrencyChange(newCurrency) {
@@ -47,25 +49,29 @@ function handleAmountChange(event) {
     setAmount(newValue);
   }
 }
-const exchangeRate = 0.95;
-
+const exchangeRate = exchangeRates[toCurrency];
 const numericAmount = Number(amount);
-const result = numericAmount * exchangeRate;
-const formattedResult = Number.isFinite(result)
-? result.toFixed(2)
-: "";
+
+const result =
+  exchangeRate !== undefined
+    ? numericAmount * exchangeRate
+    : null;
+
+const formattedResult =
+  result !== null && Number.isFinite(result)
+    ? result.toFixed(2)
+    : "";
 
 return (
 
-   <section className="max-w-[1300px] mx-auto  bg-container rounded-2xl  p-5">
+   <section className="max-w-[1050px] mx-auto bg-container rounded-2xl  p-4">
 
-    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-      <div className="bg-card text-text px-5 py-5 rounded-2xl border border-border">
+  <div className="flex items-center justify-center gap-4">
+      <div className="bg-card text-text px-5 py-5 w-[460px] rounded-2xl border border-border">
          <p className="text-text-secondary uppercase text-sm tracking-widest">Send</p>
          <div className="mt-4 flex items-center justify-between gap-4">
         <label htmlFor="amount"></label>
-        <input className="min-w-0 flex-1 bg-transparent text-3xl font-bold text-text outline-none" type="number" id="amount"min={0} step={"any"} onChange={handleAmountChange} value={amount}
-  onChange={(event) => setAmount(event.target.value)} />
+        <input className="min-w-0 flex-1 bg-transparent text-3xl font-bold text-text outline-none" type="number" id="amount"min={0} step={"any"} onChange={handleAmountChange} value={amount}/>
 
   <CurrencyDropdown
   value={fromCurrency}
@@ -76,16 +82,16 @@ return (
       </div>
 
       <button onClick={handleSwap} className="w-12 h-12 flex items-center justify-center rounded-lg bg-card border border-border">
-        <img src={exchangeIcon} alt="swap currencies" className="w-12 h-12 flex items-center justify-center rounded-lg bg-card border border-border transition-all duration-200 hover:scale-110 hover:border-accent active:scale-95"/>
+        <img src={exchangeIcon} alt="swap currencies" className="w-8 h-8 flex items-center justify-center rounded-lg bg-card border border-border transition-all duration-200 hover:scale-110 hover:border-accent active:scale-95"/>
       </button>
 
-      <div className="text-text bg-card text-text px-5 py-5 rounded-2xl border border-border">
+      <div className="text-text bg-card text-text px-5 py-5 w-[460px] rounded-2xl border border-border">
       <p className="text-text-secondary uppercase text-sm tracking-widest">Receive</p>
       <div className="mt-4 flex items-center justify-between gap-4">
         <label htmlFor="result"></label>
         <input
   id="result"
-  value={formattedResult}
+  value={isLoading ? "Loading..." : formattedResult}
   readOnly
   className="min-w-0 flex-1 bg-transparent text-3xl font-bold text-accent outline-none"
 />
@@ -100,7 +106,11 @@ return (
       </div>
       <div className="mt-6 border-t border-divider pt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          1 {fromCurrency} = {exchangeRate} {toCurrency}
+          {isLoading
+    ? "Loading..."
+    : exchangeRate !== undefined
+      ? `1 ${fromCurrency} = ${exchangeRate} ${toCurrency}`
+      : error || "Rate unavailable"}
         </div>
         <div className="flex items-center gap-3">
           <button className="flex items-center gap-2 bg-accent text-black px-4 py-2 rounded-lg font-semibold">

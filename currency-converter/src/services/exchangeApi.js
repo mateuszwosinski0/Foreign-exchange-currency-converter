@@ -8,7 +8,7 @@ export async function getExchangeRates(baseCurrency) {
   }
 
   const data = await response.json();
-console.log(data);
+
   const ratesObject = data.reduce((acc, rate) => {
   acc[rate.quote] = rate.rate;
   return acc;
