@@ -1,24 +1,26 @@
-import exchangeIcon from "@/assets/images/icon-exchange.svg";
-import CurrencyDropdown from "@/components/Dropdown/CurrencyDropdown";
+
 import useCompare from "@/hooks/useCompare";
 import getCurrencyIcon from "@/utils/getCurrencyIcon";
 export default function Compare({
   currencies,
   currenciesLoading,
+  amount,
+  fromCurrency,
+  toCurrency,
 }) {
 const {
-  baseCurrency,
-  targetCurrency,
+  
   exchangeRate,
   comparisonRates,
   comparisonCurrencies,
   isLoading,
   error,
   getPercentageChange,
-  handleBaseCurrencyChange,
-  handleTargetCurrencyChange,
-  handleSwap,
-} = useCompare();
+
+} = useCompare({
+  fromCurrency,
+  toCurrency,
+});
 
 
   if (currenciesLoading) {
@@ -47,50 +49,7 @@ const {
         </p>
       </div>
 
-      <div className="mt-8 flex flex-col items-center gap-4 md:flex-row">
-        <div className="w-full rounded-2xl border border-border bg-card p-5">
-          <p className="mb-4 text-sm uppercase tracking-widest text-text-secondary">
-            Base currency
-          </p>
-
-          <CurrencyDropdown
-            value={baseCurrency}
-            onChange={handleBaseCurrencyChange}
-            currencies={currencies}
-          />
-        </div>
-
-        <button
-          type="button"
-          onClick={handleSwap}
-          aria-label="Swap currencies"
-          className="
-            flex h-12 w-12 shrink-0 items-center justify-center
-            rounded-lg border border-border bg-card
-            transition-all duration-200
-            hover:scale-110 hover:border-accent
-            active:scale-95
-          "
-        >
-          <img
-            src={exchangeIcon}
-            alt=""
-            className="h-6 w-6"
-          />
-        </button>
-
-        <div className="w-full rounded-2xl border border-border bg-card p-5">
-          <p className="mb-4 text-sm uppercase tracking-widest text-text-secondary">
-            Target currency
-          </p>
-
-          <CurrencyDropdown
-            value={targetCurrency}
-            onChange={handleTargetCurrencyChange}
-            currencies={currencies}
-          />
-        </div>
-      </div>
+      
 
       <div className="mt-6 rounded-2xl border border-border bg-card p-6 text-center">
         {isLoading && (
@@ -112,16 +71,16 @@ const {
             </p>
 
             <p className="mt-3 text-3xl font-bold text-text">
-              1 {baseCurrency}
+              {amount} {fromCurrency}
               <span className="mx-3 text-text-secondary">=</span>
               <span className="text-accent">
-                {exchangeRate.toFixed(4)} {targetCurrency}
+               {(Number(amount) * exchangeRate).toFixed(2)} {toCurrency}
               </span>
             </p>
 
             <p className="mt-4 text-text-secondary">
-              1 {targetCurrency} ={" "}
-              {(1 / exchangeRate).toFixed(4)} {baseCurrency}
+              1 {fromCurrency} ={" "}
+              {(1 / exchangeRate).toFixed(4)} {toCurrency}
             </p>
           </>
         )}
@@ -134,12 +93,12 @@ const {
       </p>
 
       <h3 className="mt-2 text-xl font-bold text-text">
-        {baseCurrency} against major currencies
+        {fromCurrency} against major currencies
       </h3>
     </div>
 
     <p className="text-sm text-text-secondary">
-      Rates for 1 {baseCurrency}
+      Rates for 1 {fromCurrency}
     </p>
   </div>
 
@@ -181,7 +140,7 @@ const {
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm uppercase tracking-widest text-text-secondary">
-            {baseCurrency} / {currency}
+            {fromCurrency} / {currency}
           </p>
 
           <p className="mt-3 text-2xl font-bold text-text">
@@ -228,7 +187,7 @@ const {
 
       <div className="mt-4 flex items-center justify-between gap-3">
         <p className="text-sm text-text-secondary">
-          1 {baseCurrency} ={" "}
+          1 {fromCurrency} ={" "}
           {rate !== undefined ? rate.toFixed(4) : "—"}{" "}
           {currency}
         </p>

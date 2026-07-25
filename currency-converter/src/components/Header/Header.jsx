@@ -1,15 +1,21 @@
 import logo from "@/assets/images/logo.svg";
 
-export default function Header({ currencyCount }) {
+export default function Header({
+   currencyCount,
+
+ }) {
+  
+
   return (
-    <header className="w-full flex items-center justify-between max-w-[1300px] mx-auto">
+    <header className="flex h-[66px] w-full items-center justify-between px-4 sm:px-6">
       
-        <img src={logo} alt="logo" className="h-8"/>
+        <img src={logo} alt="logo" className="h-8 w-auto sm:h-9"/>
         
 
-      <div className="text-text-secondary uppercase text-sm tracking-widest">
+      <p className="hidden text-[11px] font-medium tracking-[0.22em] text-text-muted md:block">
         {currencyCount} CURRENCIES • DATA BY FRANKFURTER
-      </div>
+      </p>
+    
     </header>
   );
 }

@@ -1,13 +1,21 @@
 import { useState, useMemo } from "react";
 import useFavoriteRates from "@/hooks/useFavoritesRates";
 import FavoriteCard from "@/components/Favorites/FavoriteCard";
-
+import { useToast } from "@/context/ToastContext";
 export default function Favorites({
   favorites,
   toggleFavorite,
   onSelectPair,
 }) {
+const {showToast} = useToast();
+function handleRemoveFavorite(from, to) {
+  toggleFavorite(from, to);
 
+  showToast(
+    `${from}/${to} removed from favorites`,
+    "info"
+  );
+}
   const { rates, loading, error } =
     useFavoriteRates(favorites);
 
@@ -81,7 +89,7 @@ const filteredRates = useMemo(() => {
         <FavoriteCard
           key={`${item.from}-${item.to}`}
           item={item}
-          toggleFavorite={toggleFavorite}
+          toggleFavorite={handleRemoveFavorite}
           onSelectPair={onSelectPair}
         />
       ))}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import Converter from "@/components/Converter/Converter";
 import Header from "@/components/Header/Header";
@@ -13,11 +13,22 @@ import useFavorites from "@/hooks/useFavorites";
 import { getCurrencies } from "@/services/exchangeApi";
 import useConversionLog from "@/hooks/useConversionLog";
 import Log from "@/components/Log/Log";
+import ToastContainer from "@/components/Toast/ToastContainer";
+
+import useKeyboardShortcuts from "@/hooks/useKeyboardShortcuts";
 function App() {
   const [amount, setAmount] = useState("1");
-  const [fromCurrency, setFromCurrency] = useState("USD");
-  const [toCurrency, setToCurrency] = useState("EUR");
+ const [fromCurrency, setFromCurrency] = useState(() => {
+  const params = new URLSearchParams(window.location.search);
 
+  return params.get("from") || "USD";
+});
+const [toCurrency, setToCurrency] = useState(() => {
+  const params = new URLSearchParams(window.location.search);
+
+  return params.get("to") || "EUR";
+});
+const amountInputRef = useRef(null);
   const {
     exchangeRates,
     previousRates,
@@ -25,6 +36,7 @@ function App() {
     error,
   } = useExchangeRates(fromCurrency);
 
+  
   const {
   markets,
   isLoading: marketsLoading,
@@ -32,6 +44,17 @@ function App() {
 } = useLiveMarkets();
 
   const [activeTab, setActiveTab] = useState("history");
+   useKeyboardShortcuts({
+    setActiveTab,
+    handleSwap,
+    amountInputRef,
+   })
+
+   
+   function handleSwap() {
+  setFromCurrency(toCurrency);
+  setToCurrency(fromCurrency);
+}
 
   const [currencies, setCurrencies] = useState([]);
 const [currenciesLoading, setCurrenciesLoading] = useState(true);
@@ -65,77 +88,103 @@ const {
     removeConversion,
     clearLog,
 } = useConversionLog();
-  return (
-    <div className="min-h-screen bg-background text-text font-main">
-      <div className="max-w-[1300px] mx-auto px-6 pt-10">
-        <Header currencyCount={currencies.length} />
 
-        <main className="mt-24">
-          <LiveMarkets
-  markets={markets}
-  isLoading={marketsLoading}
-  error={marketsError}
-/>
-    
-<Converter
-  currencies={currencies}
-  currenciesLoading={currenciesLoading}
-  amount={amount}
-  setAmount={setAmount}
-  fromCurrency={fromCurrency}
-  setFromCurrency={setFromCurrency}
-  toCurrency={toCurrency}
-  setToCurrency={setToCurrency}
-  exchangeRates={exchangeRates}
-  isLoading={isLoading}
-  error={error}
-  isFavorite={isFavorite}
-  toggleFavorite={toggleFavorite}
-  addConversion={addConversion}
-/>
 
-<Tabs
-  activeTab={activeTab}
-  setActiveTab={setActiveTab}
-/>
+useEffect(() => {
+  const params = new URLSearchParams();
 
-<div className="mx-auto w-full max-w-6xl px-4 pb-8">
-  {activeTab === "history" && (
-    <History
-      fromCurrency={fromCurrency}
-      toCurrency={toCurrency}
-    />
-  )}
+  params.set("from", fromCurrency);
+  params.set("to", toCurrency);
 
-  {activeTab === "compare" && (
-    <Compare
-      currencies={currencies}
-      currenciesLoading={currenciesLoading}
-    />
-  )}
-
-  {activeTab === "favorites" && (
-    <Favorites
-      favorites={favorites}
-      toggleFavorite={toggleFavorite}
-      onSelectPair={handleSelectFavorite}
-    />
-  )}
-
-  {activeTab === "log" && (
-    <Log
-      logs={logs}
-      removeConversion={removeConversion}
-      clearLog={clearLog}
-    />
-  )}
-</div>
-         
-
-        </main>
-      </div>
-    </div>
+  window.history.replaceState(
+    {},
+    "",
+    `?${params.toString()}`
   );
+}, [fromCurrency, toCurrency])
+
+
+  return (
+  <div className="min-h-screen bg-background text-text font-main overflow-y-hidden">
+    <div className="mx-auto w-full max-w-[1240px] px-4 pt-3 sm:px-6 sm:pt-4 lg:px-8 lg:pt-5">
+      <Header currencyCount={currencies.length} />
+    </div>
+
+    <div className="mt-8 sm:mt-10 lg:mt-12">
+      <LiveMarkets
+        markets={markets}
+        isLoading={marketsLoading}
+        error={marketsError}
+      />
+    </div>
+
+    <main className="mx-auto w-full max-w-[1040px] px-4 pt-6 sm:px-6 sm:pt-10 lg:px-0">
+      <h1 className="mb-5 text-xl font-medium tracking-[0.14em] text-white sm:text-2xl">
+        CHECK THE RATE
+      </h1>
+
+      <Converter
+        currencies={currencies}
+        currenciesLoading={currenciesLoading}
+        amount={amount}
+        setAmount={setAmount}
+        fromCurrency={fromCurrency}
+        setFromCurrency={setFromCurrency}
+        toCurrency={toCurrency}
+        setToCurrency={setToCurrency}
+        exchangeRates={exchangeRates}
+        isLoading={isLoading}
+        error={error}
+        isFavorite={isFavorite}
+        toggleFavorite={toggleFavorite}
+        addConversion={addConversion}
+        amountInputRef={amountInputRef}
+      />
+
+      <Tabs
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+      />
+
+      <div className="pb-8 sm:pb-10">
+        {activeTab === "history" && (
+          <History
+            fromCurrency={fromCurrency}
+            toCurrency={toCurrency}
+          />
+        )}
+
+        {activeTab === "compare" && (
+          <Compare
+            currencies={currencies}
+            currenciesLoading={currenciesLoading}
+            amount={amount}
+            fromCurrency={fromCurrency}
+            toCurrency={toCurrency}
+          />
+        )}
+
+        {activeTab === "favorites" && (
+          <Favorites
+            favorites={favorites}
+            toggleFavorite={toggleFavorite}
+            onSelectPair={handleSelectFavorite}
+          />
+        )}
+
+        {activeTab === "log" && (
+          <Log
+            logs={logs}
+            removeConversion={removeConversion}
+            clearLog={clearLog}
+          />
+        )}
+      </div>
+    </main>
+
+    <ToastContainer />
+  </div>
+);
 }
 
 export default App;

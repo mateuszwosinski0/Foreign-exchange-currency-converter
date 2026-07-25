@@ -11,9 +11,11 @@ const MAJOR_CURRENCIES = [
   "AUD",
 ];
 
-export default function useCompare() {
-  const [baseCurrency, setBaseCurrency] = useState("USD");
-  const [targetCurrency, setTargetCurrency] = useState("EUR");
+export default function useCompare({
+  fromCurrency, 
+  toCurrency,
+}) {
+
 
   const [exchangeRate, setExchangeRate] = useState(null);
   const [comparisonRates, setComparisonRates] = useState({});
@@ -24,9 +26,9 @@ export default function useCompare() {
 
   const comparisonCurrencies = useMemo(() => {
     return MAJOR_CURRENCIES
-      .filter((currency) => currency !== baseCurrency)
+      .filter((currency) => currency !== fromCurrency)
       .slice(0, 6);
-  }, [baseCurrency]);
+  }, [fromCurrency]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -38,13 +40,13 @@ export default function useCompare() {
 
         const quotes = Array.from(
           new Set([
-            targetCurrency,
+           toCurrency,
             ...comparisonCurrencies,
           ])
         ).join(",");
 
         const latestResponse = await fetch(
-          `https://api.frankfurter.dev/v2/rates?base=${baseCurrency}&quotes=${quotes}`,
+          `https://api.frankfurter.dev/v2/rates?base=${fromCurrency}&quotes=${quotes}`,
           {
             signal: controller.signal,
           }
@@ -58,13 +60,13 @@ export default function useCompare() {
 
         const latestRates = convertRatesArrayToObject(latestData);
 
-        setExchangeRate(latestRates[targetCurrency] ?? null);
+        setExchangeRate(latestRates[toCurrency] ?? null);
         setComparisonRates(latestRates);
 
         const previousDate = getPreviousDate();
 
         const previousResponse = await fetch(
-          `https://api.frankfurter.dev/v2/rates?date=${previousDate}&base=${baseCurrency}&quotes=${comparisonCurrencies.join(",")}`,
+          `https://api.frankfurter.dev/v2/rates?date=${previousDate}&base=${fromCurrency}&quotes=${comparisonCurrencies.join(",")}`,
           {
             signal: controller.signal,
           }
@@ -99,31 +101,11 @@ export default function useCompare() {
 
     return () => controller.abort();
   }, [
-    baseCurrency,
-    targetCurrency,
+    fromCurrency,
+    toCurrency,
     comparisonCurrencies,
   ]);
 
-  function handleBaseCurrencyChange(newCurrency) {
-    if (newCurrency === targetCurrency) {
-      setTargetCurrency(baseCurrency);
-    }
-
-    setBaseCurrency(newCurrency);
-  }
-
-  function handleTargetCurrencyChange(newCurrency) {
-    if (newCurrency === baseCurrency) {
-      setBaseCurrency(targetCurrency);
-    }
-
-    setTargetCurrency(newCurrency);
-  }
-
-  function handleSwap() {
-    setBaseCurrency(targetCurrency);
-    setTargetCurrency(baseCurrency);
-  }
 
   function getPercentageChange(currency) {
     const currentRate = comparisonRates[currency];
@@ -144,20 +126,14 @@ export default function useCompare() {
   }
 
   return {
-    baseCurrency,
-    targetCurrency,
     exchangeRate,
     comparisonRates,
     comparisonCurrencies,
     isLoading,
     error,
     getPercentageChange,
-    handleBaseCurrencyChange,
-    handleTargetCurrencyChange,
-    handleSwap,
-  };
 }
-
+}
 function convertRatesArrayToObject(rates) {
   if (!Array.isArray(rates)) {
     return {};
@@ -176,4 +152,3 @@ function getPreviousDate() {
 
   return date.toISOString().split("T")[0];
 }
-

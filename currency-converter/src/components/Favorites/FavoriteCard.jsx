@@ -1,5 +1,6 @@
 import getFlagUrl from "@/utils/getFlagUrl";
 import iconDelete from "@/assets/images/icon-delete-filled.svg";
+
 export default function FavoriteCard({
   item,
   toggleFavorite,

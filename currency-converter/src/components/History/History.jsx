@@ -82,16 +82,16 @@ const ranges = ["1D", "1W", "1M", "3M", "1Y", "5Y"];
 
   return (
   <section className="rounded-xl border border-border bg-container p-6">
-    <div className="mb-5 flex items-end justify-between gap-4">
+    <div className="mb-5 flex md:flex-row md:items-end md:justify-between gap-4 flex-col items-start">
   <div>
     
 
-    <h2 className="text-2xl font-bold">
+    <h2 className="text-xl md:text-2xl font-bold">
       {fromCurrency} / {toCurrency}
     </h2>
   </div>
 
-  <div className="flex gap-2 rounded-lg bg-white/5 p-1">
+  <div className="flex gap-2 rounded-lg bg-white/5 p-1 w-full overflow-x-auto md:w-auto">
     {ranges.map((range) => (
       <button
         key={range}
