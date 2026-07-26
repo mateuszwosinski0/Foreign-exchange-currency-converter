@@ -4,7 +4,7 @@ A modern currency exchange dashboard built with React and Tailwind CSS.
 
 Users can convert currencies, compare exchange rates, explore historical charts, follow live market data, save favorite currency pairs, and keep a conversion history.
 
-🔗 **Live Demo:** [https://your-demo.vercel.app](https://foreign-exchange-currency-converter-three.vercel.app/?from=USD&to=EUR)
+🔗 **Live Demo:**(https://foreign-exchange-currency-converter-three.vercel.app/?from=USD&to=EUR)
 
 ---
 
