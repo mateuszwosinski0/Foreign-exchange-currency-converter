@@ -105,8 +105,8 @@ useEffect(() => {
 
 
   return (
-  <div className="min-h-screen bg-background text-text font-main overflow-y-hidden">
-    <div className="mx-auto w-full max-w-[1240px] px-4 pt-3 sm:px-6 sm:pt-4 lg:px-8 lg:pt-5">
+  <div className="min-h-screen bg-background text-text font-main overflow-hidden">
+    <div className="mx-auto w-full max-w-[1980px] px-4 pt-3 sm:px-6 sm:pt-4 lg:px-8 lg:pt-5">
       <Header currencyCount={currencies.length} />
     </div>
 

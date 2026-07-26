@@ -78,7 +78,7 @@ const filteredLogs = useMemo(() => {
 onClick={handleExportCsv}
 disabled={logs.length === 0}
     type="button"
-    className="rounded-lg border border-accent/60  px-3   py-2  text-xs  font-semibold  uppercase  tracking-wide  text-accent   transition   hover:border-accent  hover:bg-accent/10">
+    className="rounded-lg border border-accent/60  px-3   py-2  text-xs  font-semibold  uppercase  tracking-wide  text-accent   transition   hover:border-accent  hover:bg-accent/10 hover:cursor-pointer">
     Export CSV
   </button>
 
@@ -86,7 +86,7 @@ disabled={logs.length === 0}
     <button
       type="button"
       onClick={handleClearLog}
-      className=" rounded-lg border border-red-500/40  px-3 py-2  text-xs  font-semibold  uppercase tracking-wide    text-red-400   transition  hover:border-red-500 hover:bg-red-500/10 hover:text-red-300">
+      className=" rounded-lg border border-red-500/40  px-3 py-2  text-xs  font-semibold  uppercase tracking-wide    text-red-400   transition  hover:border-red-500 hover:bg-red-500/10 hover:text-red-300 hover:cursor-pointer">
         Clear all
     </button>
   )}

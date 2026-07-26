@@ -79,8 +79,7 @@ const {
             </p>
 
             <p className="mt-4 text-text-secondary">
-              1 {fromCurrency} ={" "}
-              {(1 / exchangeRate).toFixed(4)} {toCurrency}
+                1 {fromCurrency} = {exchangeRate.toFixed(4)} {toCurrency}
             </p>
           </>
         )}
@@ -98,7 +97,7 @@ const {
     </div>
 
     <p className="text-sm text-text-secondary">
-      Rates for 1 {fromCurrency}
+      Rates for {amount} {fromCurrency}
     </p>
   </div>
 
@@ -127,7 +126,10 @@ const {
 
   const isPositive =
     percentageChange !== null && percentageChange >= 0;
-
+const convertedAmount =
+  rate !== undefined
+    ? Number(amount) * rate
+    : null;
   return (
     <div
       key={currency}
@@ -144,7 +146,7 @@ const {
           </p>
 
           <p className="mt-3 text-2xl font-bold text-text">
-            {rate !== undefined ? rate.toFixed(4) : "—"}
+            {rate !== undefined ? convertedAmount?.toFixed(2): "—"}
           </p>
         </div>
 

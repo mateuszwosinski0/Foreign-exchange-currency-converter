@@ -64,7 +64,7 @@ export default function CurrencyDropdown({
         aria-expanded={isOpen}
         className="
           flex items-center gap-2 rounded-lg
-          border border-border bg-dropdown px-3 py-2
+          border border-border bg-dropdown px-3 py-2 hover:cursor-pointer
         "
       >
         {selectedIcon.type === "flag" && (
@@ -127,27 +127,41 @@ export default function CurrencyDropdown({
             animate-[dropdownOpen_150ms_ease-out]
           "
         >
-          <div
-            className="
-              sticky top-0 z-10
-              border-b border-border bg-dropdown p-3
-            "
-          >
-            <input
-              ref={inputRef}
-              type="text"
-              value={search}
-              placeholder="Search currency..."
-              onChange={(event) => setSearch(event.target.value)}
-              onKeyDown={handleKeyDown}
-              className="
-                w-full rounded-lg
-                border border-border bg-card
-                px-3 py-2 text-sm
-                outline-none focus:border-accent
-              "
-            />
-          </div>
+         <div
+  className="
+    sticky top-0 z-10
+    border-b border-border bg-dropdown p-3
+  "
+>
+  <div className="relative">
+    <img src={searchIcon}
+     
+      className="
+        absolute left-3 top-1/2
+        -translate-y-1/2
+        text-gray-400
+        pointer-events-none
+      "
+    />
+
+    <input
+      ref={inputRef}
+      type="text"
+      value={search}
+      placeholder="Search currency..."
+      onChange={(event) => setSearch(event.target.value)}
+      onKeyDown={handleKeyDown}
+      className="
+        w-full rounded-lg
+        border border-border bg-card
+        py-2 pl-10 pr-3
+        text-sm
+        outline-none
+        focus:border-accent
+      "
+    />
+  </div>
+</div>
 
           {filteredCurrencies.length > 0 ? (
             filteredCurrencies.map((currency, index) => (

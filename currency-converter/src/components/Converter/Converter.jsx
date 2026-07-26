@@ -1,5 +1,5 @@
 import exchangeIcon from "@/assets/images/icon-exchange.svg";
-import starIcon from "@/assets/images/icon-star.svg"; 
+
 import CurrencyDropdown from "@/components/Dropdown/CurrencyDropdown";
 import useConverter from "@/hooks/useConverter";
 
@@ -140,7 +140,7 @@ function handleLogConversion() {
   transition-all duration-200
   hover:scale-110 hover:border-accent
   active:scale-95
-  md:mx-0
+  md:mx-0 hover:cursor-pointer
 "
         >
           <img
@@ -203,16 +203,11 @@ function handleLogConversion() {
   className="
   flex flex-1 items-center justify-center gap-2 rounded-lg
   bg-accent px-3 py-2
-  text-sm font-semibold text-black
-  sm:flex-none sm:px-4
+  text-sm font-semibold text-black transition-all duration-200
+  sm:flex-none sm:px-4 hover:cursor-pointer hover:-translate-y-0.5 active:scale-95
 "
 >
-  <img
-    src={starIcon}
-    alt=""
-    className="h-4 w-4"
-  />
-
+ 
   {favorite ? "Favorited" : "Favorite"}
 </button>
 
@@ -221,7 +216,9 @@ function handleLogConversion() {
  className="
   flex-1 rounded-lg border border-accent
   px-3 py-2 text-sm font-semibold
-  sm:flex-none sm:px-4
+  sm:flex-none sm:px-4 hover:cursor-pointer transition-all
+duration-200
+hover:-translate-y-0.5 active:scale-95
 "
 >
   LOG CONVERSION

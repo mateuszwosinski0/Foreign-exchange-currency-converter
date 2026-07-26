@@ -1,30 +1,33 @@
 import { useToast } from "@/context/ToastContext";
 import { useEffect, useState } from "react";
-
+import check from "@/assets/images/check.png"
+import error from "@/assets/images/error.png"
+import warning from "@/assets/images/warning.png"
+import information from "@/assets/images/information.png"
 const toastStyles = {
   success: {
-    icon: "✅",
+    icon: check,
     bg: "bg-green-500/10",
     text: "text-green-300",
     border: "border border-green-500/30",
   },
 
   error: {
-    icon: "❌",
+    icon: error,
     bg: "bg-red-500/10",
     text: "text-red-300",
     border: "border border-red-500/30",
   },
 
   warning: {
-    icon: "⚠️",
+    icon: warning,
     bg: "bg-yellow-500/10",
     text: "text-yellow-300",
     border: "border border-yellow-500/30",
   },
 
   info: {
-    icon: "ℹ️",
+    icon: information,
     bg: "bg-blue-500/10",
     text: "text-blue-300",
     border: "border border-blue-500/30",
@@ -66,7 +69,11 @@ useEffect(() => {
         ${currentToast.border}
       `}
     >
-      <span className="text-xl">{currentToast.icon}</span>
+     <img
+  src={currentToast.icon}
+  alt=""
+  className="h-5 w-5 flex-shrink-0"
+/>
 
       <p className="flex-1">{message}</p>
       <button

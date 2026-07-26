@@ -42,7 +42,7 @@ export default function FavoriteCard({
   }}
          
         >
-          <img src={iconDelete} alt="icon delete" className="transition hover:opacity-70"/>
+          <img src={iconDelete} alt="icon delete" className="transition hover:opacity-70 hover:cursor-pointer"/>
         </button>
       </div>
 

@@ -54,7 +54,7 @@ export default function Tabs({ activeTab, setActiveTab }) {
             border px-4 py-4
             text-sm font-semibold uppercase
             tracking-[0.14em] text-text
-            transition-all duration-200
+            transition-all duration-200 hover:cursor-pointer
             ${
               isOpen
                 ? "rounded-t-xl border-accent bg-card"
@@ -82,7 +82,7 @@ export default function Tabs({ activeTab, setActiveTab }) {
               w-full overflow-hidden
               rounded-b-xl border border-t-0
               border-accent bg-card
-              shadow-xl
+              shadow-xl 
             "
           >
             {tabs.map((tab) => {
@@ -104,7 +104,7 @@ export default function Tabs({ activeTab, setActiveTab }) {
                     ${
                       isActive
                         ? "bg-accent/10 text-accent"
-                        : "text-text-secondary hover:bg-surface hover:text-text"
+                        : "text-text-secondary hover:bg-surface hover:text-text hover:cursor-pointer"
                     }
                   `}
                 >
@@ -123,7 +123,7 @@ export default function Tabs({ activeTab, setActiveTab }) {
             key={tab.id}
             type="button"
             onClick={() => setActiveTab(tab.id)}
-            className={`relative px-5 py-3 font-medium transition ${
+            className={`relative px-5 py-3 font-medium transition hover:cursor-pointer ${
               activeTab === tab.id
                 ? "text-accent"
                 : "text-gray-500 hover:text-white"

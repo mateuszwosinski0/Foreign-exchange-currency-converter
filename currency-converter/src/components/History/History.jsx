@@ -99,7 +99,7 @@ const ranges = ["1D", "1W", "1M", "3M", "1Y", "5Y"];
         className={
           selectedRange === range
             ? "rounded-md bg-lime-300 px-3 py-1.5 text-sm font-medium text-black"
-            : "rounded-md px-3 py-1.5 text-sm text-gray-400 transition hover:text-white"
+            : "rounded-md px-3 py-1.5 text-sm text-gray-400 transition hover:text-white hover:cursor-pointer"
         }
       >
         {range}

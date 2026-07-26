@@ -48,7 +48,7 @@ export default function LogItem({
         <img
           src={iconDelete}
           alt=""
-          className="h-4 w-4"
+          className="h-4 w-4 hover:cursor-pointer"
         />
       </button>
  
