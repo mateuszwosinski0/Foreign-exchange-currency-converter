@@ -1,4 +1,4 @@
-import { useToast } from "@/context/ToastContext";
+import { useToast } from "@/hooks/useToast";
 import Toast from "./Toast";
 
 function ToastContainer() {

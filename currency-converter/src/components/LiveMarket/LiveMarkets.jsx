@@ -22,7 +22,7 @@ export default function LiveMarkets({
    
     <div className="z-10 flex shrink-0 items-center gap-2 bg-accent px-2 py-3 text-xs font-semibold tracking-wide text-black sm:px-5 sm:text-sm">
       <span>•</span>
-      <span>LIVE MARKETS</span>
+      <span title="Daily reference rates · refreshed every minute">DAILY RATES</span>
     </div>
 
     

@@ -1,56 +1,11 @@
-import { useEffect, useState } from "react";
+import useAsyncResource from "@/hooks/useAsyncResource";
+import { getExchangeRate } from "@/services/exchangeApi";
 
-import {
-  getExchangeRate,
-
- 
-} from "@/services/exchangeApi";
 export default function useFavoriteRates(favorites) {
-    const [rates, setRates] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-   useEffect(() => {
-  async function fetchFavoriteRates() {
-    try {
-      setLoading(true);
-      setError(null);
-        if (favorites.length === 0) {
-    setRates([]);
-    return;
-  }
-
-      
-  const results = await Promise.all(
-  favorites.map(async ({ from, to }) => {
-  const rate = await getExchangeRate(from, to);
-
-return {
-  from,
-  to,
-  rate,
-  updatedAt: Date.now(),
-};
-  })
-);
-
-      setRates(results);
-   } catch (error) {
-  setError(error.message);
-} finally {
-  setLoading(false);
+  const { data, isLoading, error } = useAsyncResource(JSON.stringify(favorites), (signal) =>
+    Promise.all(favorites.map(async ({ from, to }) => ({
+      from, to, rate: await getExchangeRate(from, to, signal), updatedAt: Date.now(),
+    })))
+  );
+  return { rates: data ?? [], loading: isLoading, error };
 }
-  }
-
-  fetchFavoriteRates();
-}, [favorites]);
-
-  return {
-    rates,
-    loading,
-    error,
-  };
-
- }
-
- 

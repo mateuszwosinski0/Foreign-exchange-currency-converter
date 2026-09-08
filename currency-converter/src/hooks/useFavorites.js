@@ -1,25 +1,17 @@
+import { readStoredList, writeStoredList, isCurrencyPair } from "@/utils/storage";
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "favorite-currency-pairs";
 
 export default function useFavorites() {
-  const [favorites, setFavorites] = useState(() => {
-  const savedFavorites = localStorage.getItem(STORAGE_KEY);
+  const [favorites, setFavorites] = useState(() =>
+    readStoredList(STORAGE_KEY, isCurrencyPair)
+  );
 
-  if (!savedFavorites) {
-    return [];
-  }
+  useEffect(() => {
+    writeStoredList(STORAGE_KEY, favorites);
+  }, [favorites]);
 
-  return JSON.parse(savedFavorites);
-});
-
-
-    useEffect(() => {
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(favorites)
-        );
-    }, [favorites]);
 
 function isFavorite(from, to) {
   return favorites.some(
@@ -59,7 +51,3 @@ function isFavorite(from, to) {
         toggleFavorite,
     };
 }
-
-
-
-

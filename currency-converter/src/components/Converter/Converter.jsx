@@ -3,8 +3,7 @@ import exchangeIcon from "@/assets/images/icon-exchange.svg";
 import CurrencyDropdown from "@/components/Dropdown/CurrencyDropdown";
 import useConverter from "@/hooks/useConverter";
 
-import { useToast } from "@/context/ToastContext";
-import { useState } from "react";
+import { useToast } from "@/hooks/useToast";
 export default function Converter({
   currencies,
   currenciesLoading,
@@ -20,9 +19,7 @@ export default function Converter({
   isFavorite,
   toggleFavorite,
   addConversion,
-  removeConversion,
-  clearLog,
-  logs,
+  onRetry,
   amountInputRef,
   
 }) {
@@ -65,7 +62,12 @@ function handleToggleFavorite() {
   toggleFavorite(fromCurrency, toCurrency);
 }
 
+const canLog = !isLoading && !error && amount !== "" &&
+  Number.isFinite(Number(amount)) && Number(amount) >= 0 &&
+  Number.isFinite(exchangeRate) && exchangeRate > 0 && formattedResult !== "";
+
 function handleLogConversion() {
+  if (!canLog) return;
   addConversion({
     id: crypto.randomUUID(),
     amount: Number(amount),
@@ -179,6 +181,7 @@ function handleLogConversion() {
         </div>
       </div>
 
+      {error && <p role="alert" className="mt-3 text-red-300">{error} <button type="button" onClick={onRetry} className="underline">Retry rates</button></p>}
       <div
   className="
     mt-6 flex flex-col items-center gap-4
@@ -213,8 +216,10 @@ function handleLogConversion() {
 
           <button
   onClick={handleLogConversion}
+  type="button"
+  disabled={!canLog}
  className="
-  flex-1 rounded-lg border border-accent
+  flex-1 rounded-lg border border-accent disabled:cursor-not-allowed disabled:opacity-40
   px-3 py-2 text-sm font-semibold
   sm:flex-none sm:px-4 hover:cursor-pointer transition-all
 duration-200

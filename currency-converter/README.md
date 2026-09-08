@@ -1,16 +1,47 @@
-# React + Vite
+# Currency Converter
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplikacja do przeliczania walut i przeglądania historii kursów, zbudowana w React.
 
-Currently, two official plugins are available:
+## Funkcje
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Przeliczanie kwot i zamiana waluty źródłowej z docelową.
+- Wyszukiwanie walut w dropdownach oraz obsługa klawiaturą.
+- Historia kursów na wykresie: 1 dzień, tydzień, miesiąc, 3 miesiące, rok i 5 lat.
+- Porównanie waluty bazowej z głównymi walutami.
+- Ulubione pary i dziennik ostatnich 20 przeliczeń zapisane lokalnie.
+- Eksport dziennika do CSV.
+- Wybrana para walut w adresie URL.
+- Stany ładowania, błędów i pustych wyników.
 
-## React Compiler
+## Technologie
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+React 19, JavaScript, Vite, Tailwind CSS, Recharts, Lucide React, Frankfurter API.
 
-## Expanding the ESLint configuration
+## Uruchomienie
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Polecenia uruchamiaj w folderze `currency-converter`, w którym znajduje się `package.json`.
+
+```bash
+npm install
+npm run dev
+```
+
+## Sprawdzenie i build
+
+```bash
+npm run lint
+npm run build
+npm run preview
+```
+
+## Dane
+
+Źródło: [Frankfurter](https://frankfurter.dev/). API udostępnia dzienne kursy referencyjne, a nie notowania giełdowe w czasie rzeczywistym. Pasek kursów odświeża zapytanie co minutę; w dni bez publikacji kurs może pozostać niezmieniony. Klucz API nie jest wymagany.
+
+Ulubione i dziennik są przechowywane w localStorage na danym urządzeniu. Gdy pamięć przeglądarki jest niedostępna, aplikacja działa w bieżącej sesji.
+
+## Skróty klawiaturowe
+
+- Alt + H: historia; Alt + C: porównanie.
+- Alt + F: ulubione; Alt + L: dziennik.
+- Alt + S: zamiana walut; Alt + K: pole kwoty.

@@ -38,12 +38,12 @@ export default function useConverter({
       return;
     }
 
-    if (Number(newValue) >= 0) {
+    if (Number.isFinite(Number(newValue)) && Number(newValue) >= 0) {
       setAmount(newValue);
     }
   }
 
-  const exchangeRate = exchangeRates?.[toCurrency];
+  const exchangeRate = fromCurrency === toCurrency ? 1 : exchangeRates?.[toCurrency];
 
   const formattedResult = useMemo(() => {
     if (amount === "" || exchangeRate === undefined) {

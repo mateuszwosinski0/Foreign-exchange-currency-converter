@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import useAsyncResource from "@/hooks/useAsyncResource";
+import { getDateRange } from "@/utils/rateDates";
 
 import { getHistoricalRange } from "@/services/exchangeApi";
 import {
@@ -16,67 +18,15 @@ export default function History({
   toCurrency,
 }) {
   const [selectedRange, setSelectedRange] = useState("1M");
-  const [historyData, setHistoryData] = useState([]);
-
-  useEffect(() => {
-    async function loadHistory() {
-      try {
-        const { startDate, endDate } = getDateRange(selectedRange);
-
-        const data = await getHistoricalRange(
-          fromCurrency,
-          toCurrency,
-          startDate,
-          endDate
-        );
-
-        setHistoryData(data);
-      } catch (error) {
-        console.error(error);
-      }
+  const { data, isLoading, error, retry } = useAsyncResource(
+    JSON.stringify([fromCurrency, toCurrency, selectedRange]),
+    (signal) => {
+      const { startDate, endDate } = getDateRange(selectedRange);
+      return getHistoricalRange(fromCurrency, toCurrency, startDate, endDate, signal);
     }
-
-    loadHistory();
-  }, [selectedRange, fromCurrency, toCurrency]);
-const ranges = ["1D", "1W", "1M", "3M", "1Y", "5Y"];
-    function getDateRange(range) {
-  const endDate = new Date();
-  const startDate = new Date();
-
-  switch (range) {
-    case "1D":
-      startDate.setDate(startDate.getDate() - 1);
-      break;
-
-    case "1W":
-      startDate.setDate(startDate.getDate() - 7);
-      break;
-
-    case "1M":
-      startDate.setMonth(startDate.getMonth() - 1);
-      break;
-
-    case "3M":
-      startDate.setMonth(startDate.getMonth() - 3);
-      break;
-
-    case "1Y":
-      startDate.setFullYear(startDate.getFullYear() - 1);
-      break;
-
-    case "5Y":
-      startDate.setFullYear(startDate.getFullYear() - 5);
-      break;
-
-    default:
-      startDate.setMonth(startDate.getMonth() - 1);
-  }
-
-  return {
-    startDate: startDate.toISOString().split("T")[0],
-    endDate: endDate.toISOString().split("T")[0],
-  };
-}
+  );
+  const historyData = data ?? [];
+  const ranges = ["1D", "1W", "1M", "3M", "1Y", "5Y"];
 
 
 
@@ -107,6 +57,10 @@ const ranges = ["1D", "1W", "1M", "3M", "1Y", "5Y"];
     ))}
   </div>
 </div>
+{isLoading ? <p role="status" className="py-12 text-text-secondary">Loading history...</p>
+  : error ? <div role="alert" className="py-8 text-red-300"><p>{error}</p><button type="button" onClick={retry} className="mt-2 underline">Retry history</button></div>
+  : historyData.length === 0 ? <p role="status" className="py-12 text-text-secondary">No historical rates available for this period.</p>
+  : <>
 <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
   <div className="rounded-xl border border-border bg-white/[0.03] p-4">
     <p className="text-xs uppercase tracking-wider text-gray-500">
@@ -246,6 +200,7 @@ const ranges = ["1D", "1W", "1M", "3M", "1Y", "5Y"];
     </AreaChart>
   </ResponsiveContainer>
 </div>
+  </>}
   </section>
 );
 }

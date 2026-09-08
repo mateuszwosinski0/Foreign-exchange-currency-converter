@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import LogItem from "@/components/Log/LogItem";
 import { exportCsv } from "@/utils/exportCsv";
-import { useToast } from "@/context/ToastContext";
+import { useToast } from "@/hooks/useToast";
 export default function Log({
   logs,
   removeConversion,

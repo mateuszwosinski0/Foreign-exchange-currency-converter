@@ -19,7 +19,7 @@ export function exportCsv(logs) {
       conversion.result,
       conversion.rate,
       formatDate(conversion.date),
-    ].join(",")
+    ].map((value) => `"${String(value).replaceAll('"', '""')}"`).join(",")
   );
 
   const csv = [headers.join(","), ...rows].join("\n");

@@ -2,7 +2,6 @@
 import useCompare from "@/hooks/useCompare";
 import getCurrencyIcon from "@/utils/getCurrencyIcon";
 export default function Compare({
-  currencies,
   currenciesLoading,
   amount,
   fromCurrency,

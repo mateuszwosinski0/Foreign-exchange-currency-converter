@@ -1,4 +1,4 @@
-import { useToast } from "@/context/ToastContext";
+import { useToast } from "@/hooks/useToast";
 import { useEffect, useState } from "react";
 import check from "@/assets/images/check.png"
 import error from "@/assets/images/error.png"

@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import useFavoriteRates from "@/hooks/useFavoritesRates";
 import FavoriteCard from "@/components/Favorites/FavoriteCard";
-import { useToast } from "@/context/ToastContext";
+import { useToast } from "@/hooks/useToast";
 export default function Favorites({
   favorites,
   toggleFavorite,

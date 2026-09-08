@@ -1,10 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { lazy, Suspense, useState, useEffect, useRef } from "react";
 
 import Converter from "@/components/Converter/Converter";
 import Header from "@/components/Header/Header";
 import LiveMarkets from "@/components/LiveMarket/LiveMarkets";
 import Tabs from "@/components/Tabs/Tabs";
-import History from "@/components/History/History";
 import Compare from "@/components/Compare/Compare";
 import Favorites from "@/components/Favorites/Favorites";
 import useExchangeRates from "@/hooks/useExchangeRates";
@@ -16,24 +15,27 @@ import Log from "@/components/Log/Log";
 import ToastContainer from "@/components/Toast/ToastContainer";
 
 import useKeyboardShortcuts from "@/hooks/useKeyboardShortcuts";
+const History = lazy(() => import("@/components/History/History"));
 function App() {
   const [amount, setAmount] = useState("1");
  const [fromCurrency, setFromCurrency] = useState(() => {
   const params = new URLSearchParams(window.location.search);
 
-  return params.get("from") || "USD";
+  const value = params.get("from")?.toUpperCase();
+  return /^[A-Z]{3}$/.test(value) ? value : "USD";
 });
 const [toCurrency, setToCurrency] = useState(() => {
   const params = new URLSearchParams(window.location.search);
 
-  return params.get("to") || "EUR";
+  const value = params.get("to")?.toUpperCase();
+  return /^[A-Z]{3}$/.test(value) ? value : "EUR";
 });
 const amountInputRef = useRef(null);
   const {
     exchangeRates,
-    previousRates,
     isLoading,
     error,
+    retry: retryRates,
   } = useExchangeRates(fromCurrency);
 
   
@@ -58,21 +60,34 @@ const amountInputRef = useRef(null);
 
   const [currencies, setCurrencies] = useState([]);
 const [currenciesLoading, setCurrenciesLoading] = useState(true);
+const [currenciesError, setCurrenciesError] = useState("");
+const [currencyAttempt, setCurrencyAttempt] = useState(0);
 useEffect(() => {
+  const controller = new AbortController();
   async function loadCurrencies() {
     try {
-      const data = await getCurrencies();
-
+      const data = await getCurrencies(controller.signal);
+      if (controller.signal.aborted) return;
       setCurrencies(data);
+      const valid = (code) => data.some((currency) => currency.code === code);
+      setFromCurrency((code) => valid(code) ? code : (valid("USD") ? "USD" : data[0].code));
+      setToCurrency((code) => valid(code) ? code : (valid("EUR") ? "EUR" : data[0].code));
+      setCurrenciesError("");
     } catch (error) {
-      console.error("Currency loading error:", error);
+      if (!controller.signal.aborted) setCurrenciesError(error.message);
     } finally {
-      setCurrenciesLoading(false);
+      if (!controller.signal.aborted) setCurrenciesLoading(false);
     }
   }
-
   loadCurrencies();
-}, []);
+  return () => controller.abort();
+}, [currencyAttempt]);
+
+function retryCurrencies() {
+  setCurrenciesLoading(true);
+  setCurrenciesError("");
+  setCurrencyAttempt((value) => value + 1);
+}
 const {
   favorites,
   isFavorite,
@@ -123,7 +138,12 @@ useEffect(() => {
         CHECK THE RATE
       </h1>
 
-      <Converter
+      {currenciesError ? (
+        <div role="alert" className="rounded-xl border border-red-400/40 p-4 text-red-300">
+          <p>{currenciesError}</p>
+          <button type="button" onClick={retryCurrencies} className="mt-2 underline">Retry currencies</button>
+        </div>
+      ) : <Converter
         currencies={currencies}
         currenciesLoading={currenciesLoading}
         amount={amount}
@@ -139,7 +159,8 @@ useEffect(() => {
         toggleFavorite={toggleFavorite}
         addConversion={addConversion}
         amountInputRef={amountInputRef}
-      />
+        onRetry={retryRates}
+      />}
 
       <Tabs
         activeTab={activeTab}
@@ -148,15 +169,16 @@ useEffect(() => {
 
       <div className="pb-8 sm:pb-10">
         {activeTab === "history" && (
+          <Suspense fallback={<p role="status">Loading history...</p>}>
           <History
             fromCurrency={fromCurrency}
             toCurrency={toCurrency}
           />
+          </Suspense>
         )}
 
         {activeTab === "compare" && (
           <Compare
-            currencies={currencies}
             currenciesLoading={currenciesLoading}
             amount={amount}
             fromCurrency={fromCurrency}

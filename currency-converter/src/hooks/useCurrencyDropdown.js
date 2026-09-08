@@ -25,14 +25,15 @@ export default function useCurrencyDropdown({
     if (!isOpen) return;
 
     inputRef.current?.focus();
-    setHighlightedIndex(0);
   }, [isOpen]);
 
-  useEffect(() => {
+  function handleSearch(value) {
+    setSearch(value);
     setHighlightedIndex(0);
-  }, [search]);
+  }
 
   function openDropdown() {
+    setHighlightedIndex(0);
     setIsOpen(true);
   }
 
@@ -110,7 +111,7 @@ export default function useCurrencyDropdown({
     inputRef,
     isOpen,
     search,
-    setSearch,
+    setSearch: handleSearch,
     highlightedIndex,
     setHighlightedIndex,
     filteredCurrencies,
