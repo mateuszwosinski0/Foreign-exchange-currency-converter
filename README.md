@@ -1,40 +1,47 @@
-#  FX Checker
+# Currency Converter
 
-A modern currency exchange dashboard built with React and Tailwind CSS.
+Aplikacja do przeliczania walut i przeglądania historii kursów, zbudowana w React.
 
-Users can convert currencies, compare exchange rates, explore historical charts, follow live market data, save favorite currency pairs, and keep a conversion history.
+## Funkcje
 
-🔗 **Live Demo:**(https://foreign-exchange-currency-converter-three.vercel.app/?from=USD&to=EUR)
+- Przeliczanie kwot i zamiana waluty źródłowej z docelową.
+- Wyszukiwanie walut w dropdownach oraz obsługa klawiaturą.
+- Historia kursów na wykresie: 1 dzień, tydzień, miesiąc, 3 miesiące, rok i 5 lat.
+- Porównanie waluty bazowej z głównymi walutami.
+- Ulubione pary i dziennik ostatnich 20 przeliczeń zapisane lokalnie.
+- Eksport dziennika do CSV.
+- Wybrana para walut w adresie URL.
+- Stany ładowania, błędów i pustych wyników.
 
----
+## Technologie
 
-## Features
+React 19, JavaScript, Vite, Tailwind CSS, Recharts, Lucide React, Frankfurter API.
 
-- Real-time currency conversion
-- Historical exchange rate charts
-- Compare major currencies
-- Live market ticker
-- Favorite currency pairs
-- Conversion history
-- CSV export
-- Keyboard shortcuts
-- Fully responsive design
+## Uruchomienie
 
----
+Polecenia uruchamiaj w folderze `currency-converter`, w którym znajduje się `package.json`.
 
-## Built With
+```bash
+npm install
+npm run dev
+```
 
-- React
-- Vite
-- Tailwind CSS
-- Recharts
-- Frankfurter API
-- Context API
-- Custom Hooks
-- Local Storage
+## Sprawdzenie i build
 
----
+```bash
+npm run lint
+npm run build
+npm run preview
+```
 
-## Author
+## Dane
 
-GitHub: **mateuszwosinski0**
+Źródło: [Frankfurter](https://frankfurter.dev/). API udostępnia dzienne kursy referencyjne, a nie notowania giełdowe w czasie rzeczywistym. Pasek kursów odświeża zapytanie co minutę; w dni bez publikacji kurs może pozostać niezmieniony. Klucz API nie jest wymagany.
+
+Ulubione i dziennik są przechowywane w localStorage na danym urządzeniu. Gdy pamięć przeglądarki jest niedostępna, aplikacja działa w bieżącej sesji.
+
+## Skróty klawiaturowe
+
+- Alt + H: historia; Alt + C: porównanie.
+- Alt + F: ulubione; Alt + L: dziennik.
+- Alt + S: zamiana walut; Alt + K: pole kwoty.
